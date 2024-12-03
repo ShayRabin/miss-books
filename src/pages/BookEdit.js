@@ -1,23 +1,16 @@
-// BookEdit.js
-import React, { useState, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { bookService } from "../services/bookService";
 
 function BookEdit() {
-  const { bookId } = useParams();
-  const history = useHistory();
   const [book, setBook] = useState({
     title: "",
     description: "",
-    authors: [],
+    authors: "",
     listPrice: { amount: "", currencyCode: "" },
   });
 
-  useEffect(() => {
-    if (bookId) {
-      bookService.getById(bookId).then(setBook);
-    }
-  }, [bookId]);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,22 +22,14 @@ function BookEdit() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (bookId) {
-      // עדכון ספר קיים
-      bookService.updateBook(bookId, book).then(() => {
-        history.push(`/book/${bookId}`);
-      });
-    } else {
-      // יצירת ספר חדש
-      bookService.createBook(book).then(() => {
-        history.push("/book");
-      });
-    }
+    bookService.createBook(book).then(() => {
+      navigate("/book");
+    });
   };
 
   return (
     <div>
-      <h1>{bookId ? "ערוך ספר" : "הוסף ספר חדש"}</h1>
+      <h1>הוסף ספר חדש</h1>
       <form onSubmit={handleSubmit}>
         <div>
           <label>כותרת</label>
@@ -85,7 +70,7 @@ function BookEdit() {
             required
           />
         </div>
-        <button type="submit">{bookId ? "שמור שינויים" : "הוסף ספר"}</button>
+        <button type="submit">הוסף ספר</button>
       </form>
     </div>
   );
