@@ -1,3 +1,4 @@
+// BookIndex.js
 import React, { useState, useEffect } from "react";
 import { bookService } from "../services/bookService";
 import { Link } from "react-router-dom";
@@ -6,33 +7,36 @@ import BookFilter from "../components/BookFilter"; // ייבוא רכיב הסי
 function BookIndex() {
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     bookService.query().then((booksData) => {
       setBooks(booksData);
-      setFilteredBooks(booksData); // הצגת כל הספרים בהתחלה
+      setFilteredBooks(booksData);
+      setCategories([...new Set(booksData.map((book) => book.category))]); // רשימת הקטגוריות
     });
   }, []);
 
-  const filterBooks = (searchTerm) => {
-    const filtered = books.filter(
-      (book) =>
-        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        book.authors.some((author) =>
-          author.toLowerCase().includes(searchTerm.toLowerCase())
-        ) ||
-        book.listPrice.amount.toString().includes(searchTerm)
-    );
+  const filterBooks = (category) => {
+    const filtered = category
+      ? books.filter((book) => book.category === category)
+      : books;
     setFilteredBooks(filtered);
   };
 
   return (
     <div>
       <h1>רשימת הספרים</h1>
-      <BookFilter filterBooks={filterBooks} />
+      <BookFilter filterBooks={filterBooks} categories={categories} />
       <ul>
         {filteredBooks.map((book) => (
           <li key={book.id}>
+            <img
+              src={book.thumbnail}
+              alt={book.title}
+              style={{ width: "100px", height: "auto" }}
+            />{" "}
+            {/* הצגת התמונה */}
             <h2>{book.title}</h2>
             <Link to={`/book/${book.id}`}>מידע נוסף</Link>
           </li>

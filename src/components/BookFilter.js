@@ -1,15 +1,23 @@
+// BookFilter.js
 import React from "react";
 
-function BookFilter({ filterBooks }) {
-  const handleFilterChange = (e) => {
+function BookFilter({ filterBooks, categories }) {
+  const handleCategoryChange = (e) => {
     const value = e.target.value;
-    filterBooks(value); // מעביר את הערך החדש לסינון
+    filterBooks(value); // סינון לפי קטגוריה
   };
 
   return (
     <div>
-      <label>חפש לפי שם המחבר או מחיר:</label>
-      <input type="text" onChange={handleFilterChange} />
+      <label>סנן לפי קטגוריה:</label>
+      <select onChange={handleCategoryChange}>
+        <option value="">בחר קטגוריה</option>
+        {categories.map((category) => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
