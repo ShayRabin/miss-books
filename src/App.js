@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import AboutUs from "./pages/AboutUs";
+import BookIndex from "./pages/BookIndex";
+import BookDetails from "./pages/BookDetails";
+import BookEdit from "./pages/BookEdit";
+import NavBar from "./components/NavBar"; // ייבוא רכיב הניווט
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <NavBar /> {/* הוספת רכיב הניווט */}
+      <Switch>
+        <Route path="/" exact component={HomePage} />
+        <Route path="/about" component={AboutUs} />
+        <Route path="/book" exact component={BookIndex} />
+        <Route path="/book/:bookId" component={BookDetails} />
+        <Route path="/book/edit" component={BookEdit} />
+      </Switch>
+    </Router>
   );
 }
 
